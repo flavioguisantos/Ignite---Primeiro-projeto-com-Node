@@ -111,7 +111,7 @@ app.get("/account", verifyIfExistsAccountCPF, (req, res) => {
 
 app.delete("/account", verifyIfExistsAccountCPF, (req, res) => {
     const { customer } = req
-    customers.splice(customer, 1)
+    customers.splice(customers.indexOf(customer), 1)
     return res.status(200).json({msg: "account deleted"})
 })
 
