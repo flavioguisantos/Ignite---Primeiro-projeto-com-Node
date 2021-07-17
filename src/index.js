@@ -86,6 +86,41 @@ app.post("/withdraw", verifyIfExistsAccountCPF, (req, res) => {
 
 })
 
+app.get("/statement/date", verifyIfExistsAccountCPF, (req, res) => {
+  const { customer } = req 
+  const { date } = req.query
+
+  const dateFormat = new Date(date + " 00:00")
+
+  const statement = customer.statement.filter(s => s.created_at.toDateString() === new  Date(dateFormat).toDateString())
+
+  return res.status(200).json(statement)   
+})
+
+app.put("/account", verifyIfExistsAccountCPF, (req, res) => {
+    const { name } = req.body
+    const { customer } = req
+    customer.name = name
+    return res.status(201).json({msg: "account updated"})
+})
+
+app.get("/account", verifyIfExistsAccountCPF, (req, res) => {
+    const { customer } = req
+    return res.status(200).json({customer})
+})
+
+app.delete("/account", verifyIfExistsAccountCPF, (req, res) => {
+    const { customer } = req
+    customers.splice(customer, 1)
+    return res.status(200).json({msg: "account deleted"})
+})
+
+app.get("/balance", verifyIfExistsAccountCPF, (req, res) => {
+    const { customer } = req
+    const balance = getBalances(customer.statement)
+    return res.status(200).json({balance})
+})
+
 app.listen(3333, () => {
     console.log("Listening on http://localhost/3333/")
 })
